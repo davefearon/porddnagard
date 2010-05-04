@@ -1,28 +1,5 @@
 <div id="thinking"></div>
-<a href="http://www.facebook.com/oldchicago" target="_blank" id="becomeFan"><img src="/assets/images/home/becomeFan.png" /></a>
-<?
-$syndicate = json_decode( $theuser->syndicate );
-$i = 0;
-foreach( $syndicate as $s )
-{
-   if( $s->fid != "" ) $i++;
-}
-echo '<div id="friendsadded">'.$i.'</div>';
-if( $i < 5 )
-{
-   ?>
-   <a href="<?=$this->link('home', 'coupon');?>?fb_sig_user=<?=$globals->FBUid?>" id="mycalzone" class="locked"></a>
-   <div id="friendsuntilunlock"><?=(5 - $i)?></div>
-   <?
-}
-else
-{
-   ?>
-   <a href="<?=$this->link('home', 'coupon');?>?fb_sig_user=<?=$globals->FBUid?>" id="mycalzone" class="unlocked"></a>
-   <div id="friendsuntilunlock" style="display:none;"><?=(5 - $i)?></div>
-   <?
-}
-?>
+
 <script type="text/javascript">
    var original;
    var fid;
@@ -190,11 +167,6 @@ else
             pic = $(event.dragTarget).find("img").attr("src");
             rn = $(event.dragTarget).find("span").text();
 
-            $('#overlaybox .friend').empty();
-            $('#overlaybox').find('.friend').append( $(event.dragTarget).clone() );
-            $('#overlaybox').find('.position').find('.title').hide();
-            $('#overlaybox').find('.position').find('#_' + p ).show();
-
             addfriend();
          }
       }).bind("dropend", function(event){
@@ -217,56 +189,8 @@ else
 </script>
 <div id="templist" class="templist"></div>
 <div id="friendslist" class="friendslist">
-   <div class="buffer">
-      <div class='instructions'><img src="/assets/images/collective/instructions.png" width="78" height="82" /></div>
-<?
-$i = 1;
-$syndicate_array = get_object_vars($syndicate);
-$sa = array();
-foreach( $syndicate_array as $s )
-{
-   $sa[] = $s->fid;
-}
-$picked = array();
-if( $friends == "" )
-{
-   $picked[$syndicate->consigliere->fid] = "<div class='drag'><img src='".$syndicate->consigliere->pic."' width='50' /><span>".$syndicate->consigliere->rn."</span></div>";
-   $picked[$syndicate->underboss->fid] = "<div class='drag'><img src='".$syndicate->underboss->pic."' width='50' /><span>".$syndicate->underboss->rn."</span></div>";
-   $picked[$syndicate->capo_a->fid] = "<div class='drag'><img src='".$syndicate->capo_a->pic."' width='50' /><span>".$syndicate->capo_a->rn."</span></div>";
-   $picked[$syndicate->capo_b->fid] = "<div class='drag'><img src='".$syndicate->capo_b->pic."' width='50' /><span>".$syndicate->capo_b->rn."</span></div>";
-   $picked[$syndicate->capo_c->fid] = "<div class='drag'><img src='".$syndicate->capo_c->pic."' width='50' /><span>".$syndicate->capo_c->rn."</span></div>";
-   $picked[$syndicate->soldier_a->fid] = "<div class='drag'><img src='".$syndicate->soldier_a->pic."' width='50' /><span>".$syndicate->soldier_a->rn."</span></div>";
-   $picked[$syndicate->soldier_b->fid] = "<div class='drag'><img src='".$syndicate->soldier_b->pic."' width='50' /><span>".$syndicate->soldier_b->rn."</span></div>";
-   $picked[$syndicate->soldier_c->fid] = "<div class='drag'><img src='".$syndicate->soldier_c->pic."' width='50' /><span>".$syndicate->soldier_c->rn."</span></div>";
-   $picked[$syndicate->soldier_d->fid] = "<div class='drag'><img src='".$syndicate->soldier_d->pic."' width='50' /><span>".$syndicate->soldier_d->rn."</span></div>";
-   $picked[$syndicate->soldier_e->fid] = "<div class='drag'><img src='".$syndicate->soldier_e->pic."' width='50' /><span>".$syndicate->soldier_e->rn."</span></div>";
-}
-else
-{
-   foreach( $friends as $friend )
-   {
-      if( !in_array( $friend['uid'], $sa ) )
-      {
-         ?>
-         <div class='drag position_<?=$i?>' id='f_<?=$friend['uid']?>'><img src='<?=( $friend['pic_square'] != "" ) ? $friend['pic_square'] : "/assets/images/defaultpic.png";?>' width='50' /><span><?=$friend['first_name']." ".$friend['last_name']?></span></div>
-         <?
-      }
-      else
-      {
-         $picked[$friend['uid']] = "<div class='drag position_".$i."' id='f_".$friend['uid']."'><img src='";
-         if( $friend['pic_square'] != "" ) $picked[$friend['uid']] .= $friend['pic_square'];
-         else $picked[$friend['uid']] .= "/assets/images/defaultpic.png";
-         $picked[$friend['uid']] .= "' width='50' /><span>". $friend['first_name'] ." ". $friend['last_name'] ."</span></div>";
-      }
-      $i++;
-   }
-}
-?>
-   </div>
+   <div class='drag position_1' id='f_1'><img src='http://gottaplace.it/50x50' width='50' /><span>Name Goes Here</span></div>
 </div>
-
-<?=$this->form_select( "appfriends", "", $appfriends, $use_keys = true, array("class"=>"select"));?>
-
 <script type="text/javascript">
    $(document).ready(function(){
       $('#appfriends').change(function(){
@@ -329,22 +253,16 @@ else
    });
 </script>
 
-<div id="boss" class="nodrop"><div class="bossname"><? if( $theuser->sex == "male" ){ echo "GODFATHER"; }elseif( $theuser->sex == "female" ){ echo "GODMOTHER"; }else{ echo "GODFATHER"; }?></div><div class='nodrag' id='f_<?=$theuser->snid?>'><img src='<?=$theuser->profile_sqr?>' width='50px' /><span><?=$theuser->username?></span></div></div>
+<div id="consigliere" class="drop"></div>
 
-<div id="consigliere" class="drop"><?=$this->form_select( "consigliere_select", $syndicate->consigliere->n, array("Frank the Tools"=>"Frank the Tools", "Carlo the Chin"=>"Carlo the Chin","Maggie Patrone"=>"Maggie Patrone","Aunt Bella"=>"Aunt Bella"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->consigliere->fid]) ) ? $picked[$syndicate->consigliere->fid]:'';?></div>
+<div id="underboss" class="drop"></div>
 
-<div id="underboss" class="drop"><?=$this->form_select( "consigliere_select", $syndicate->underboss->n, array("Jim Papini"=>"Jim Papini", "Mama Sofia"=>"Mama Sofia","Ugly Vick"=>"Ugly Vick","Mona the Mouth"=>"Mona the Mouth"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->underboss->fid]) ) ? $picked[$syndicate->underboss->fid]:'';?></div>
+<div id="capo_a" class="drop"></div>
+<div id="capo_b" class="drop"></div>
+<div id="capo_c" class="drop"></div>
 
-<div id="capo_a" class="drop"><?=$this->form_select( "capo_a_select", $syndicate->capo_a->n, array("Tony Bam Bam"=>"Tony Bam Bam", "Fredo the Foot"=>"Fredo the Foot","Auntie Gina"=>"Auntie Gina","Angie the Face"=>"Angie the Face"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->capo_a->fid]) ) ? $picked[$syndicate->capo_a->fid]:'';?></div>
-<div id="capo_b" class="drop"><?=$this->form_select( "capo_b_select", $syndicate->capo_b->n, array("Violin Vinny"=>"Violin Vinny", "Tessa the Tooth"=>"Tessa the Tooth","Nicky the Greek"=>"Nicky the Greek","Knuckles Rizzo"=>"Knuckles Rizzo"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->capo_b->fid]) ) ? $picked[$syndicate->capo_b->fid]:'';?></div>
-<div id="capo_c" class="drop"><?=$this->form_select( "capo_c_select", $syndicate->capo_c->n, array("Jerry the Goat"=>"Jerry the Goat", "The Frenchman"=>"The Frenchman","Joey Calzone"=>"Joey Calzone","Lucy Looselips"=>"Lucy Looselips"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->capo_c->fid]) ) ? $picked[$syndicate->capo_c->fid]:'';?></div>
-
-<div id="soldier_a" class="drop"><?=$this->form_select( "soldier_a_select", $syndicate->soldier_a->n, array("Zio Carlo"=>"Zio Carlo", "Saint Nina"=>"Saint Nina","Cousin Jimmy"=>"Cousin Jimmy","Carmela Testa"=>"Carmela Testa"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->soldier_a->fid]) ) ? $picked[$syndicate->soldier_a->fid]:'';?></div>
-<div id="soldier_b" class="drop"><?=$this->form_select( "soldier_b_select", $syndicate->soldier_b->n, array("Gummy Jo"=>"Gummy Jo", "Big Bobby"=>"Big Bobby","Skinny Dina"=>"Skinny Dina","Fat Dina"=>"Fat Dina"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->soldier_b->fid]) ) ? $picked[$syndicate->soldier_b->fid]:'';?></div>
-<div id="soldier_c" class="drop"><?=$this->form_select( "soldier_c_select", $syndicate->soldier_c->n, array("Gino Bambino"=>"Gino Bambino", "Josie Pecorella"=>"Josie Pecorella","Tony Forehead"=>"Tony Forehead","Little Freddie"=>"Little Freddie"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->soldier_c->fid]) ) ? $picked[$syndicate->soldier_c->fid]:'';?></div>
-<div id="soldier_d" class="drop"><?=$this->form_select( "soldier_d_select", $syndicate->soldier_d->n, array("My Sister Mary"=>"My Sister Mary", "Mikey the Man"=>"Mikey the Man","Aldo Falbo"=>"Aldo Falbo","Big Papa Pino"=>"Big Papa Pino"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->soldier_d->fid]) ) ? $picked[$syndicate->soldier_d->fid]:'';?></div>
-<div id="soldier_e" class="drop"><?=$this->form_select( "soldier_e_select", $syndicate->soldier_e->n, array("Donnalyssa"=>"Donnalyssa", "Don Jonny"=>"Don Jonny","Monseigneur"=>"Monseigneur","Peppe da Kid"=>"Peppe da Kid"), $use_keys = true, array("class"=>"select"));?><?=( isset($picked[$syndicate->soldier_e->fid]) ) ? $picked[$syndicate->soldier_e->fid]:'';?></div>
-
-<div id="overlaybox" class="hide"><div class="friend"></div><div class="position"><img class="title" id="_consigliere" src="/assets/images/collective/_consigliere.png" /><img class="title" id="_underboss" src="/assets/images/collective/_underboss.png" /><img class="title" id="_capo_a" src="/assets/images/collective/_capo.png" /><img class="title" id="_capo_b" src="/assets/images/collective/_capo.png" /><img class="title" id="_capo_c" src="/assets/images/collective/_capo.png" /><img class="title" id="_soldier_a" src="/assets/images/collective/_soldier.png" /><img class="title" id="_soldier_b" src="/assets/images/collective/_soldier.png" /><img class="title" id="_soldier_c" src="/assets/images/collective/_soldier.png" /><img class="title" id="_soldier_d" src="/assets/images/collective/_soldier.png" /><img class="title" id="_soldier_e" src="/assets/images/collective/_soldier.png" /></div><div class="buttons"><img id="posttowall" src="/assets/images/collective/overlay_posttowall_u.png" /><img id="addmorefriends" src="/assets/images/collective/overlay_addmore_u.png" /></div></div>
-
-<div id="overlaybox2" class="hide"><img id="sharewithfriends" src="/assets/images/collective/overlay_sharewithfriends_u.png" /><a href="<?=$this->link('home', 'coupon');?>?fb_sig_user=<?=$globals->FBUid?>" id="skip" ><img src="/assets/images/collective/overlay_skip_u.png" /></a><a href="http://www.facebook.com/oldchicago" target="_blank" id="overlaybecomefan"><img src="/assets/images/collective/overlay_becomefan_u.png" /></a></div>
+<div id="soldier_a" class="drop"></div>
+<div id="soldier_b" class="drop"></div>
+<div id="soldier_c" class="drop"></div>
+<div id="soldier_d" class="drop"></div>
+<div id="soldier_e" class="drop"></div>
