@@ -1,3 +1,12 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>porDdnAgarD</title>
+<script type="text/javascript" src="/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="/js/jquery.event.drag-1.5.min.js"></script>
+<script type="text/javascript" src="/js/jquery.event.drop-1.2.min.js"></script>
+</head>
+<body>
 <div id="thinking"></div>
 
 <script type="text/javascript">
@@ -23,7 +32,6 @@
          url: "<?=URL_FULL?>home/savefamilymember?fb_sig_user=<?=$globals->FBUid?>",
          data: "p=" + p + "&fid=" + fid + "&prev=" + prev + "&pic=" + pic + "&rn=" + rn + "",
          success: function(data){
-            //console.debug("GREAT SUCCESS!");
             $('#thinking').css({
                "z-index":"0",
                "cursor":"auto"
@@ -49,8 +57,7 @@
 
    function finishedaddmore()
    {
-      Fuel.overlay.load_window( $('#wrapper'), $('#overlaybox2') );
-      $('#overlay-box').find('.overlaybox2').show();
+      return true;
    }
 
    function removefriend()
@@ -104,9 +111,6 @@
       }
       if( friendsneeded <= 0 )
       {
-         Fuel.overlay.load_window( $('#wrapper'), $('#overlaybox') );
-         $('#overlay-box').find('.overlaybox').show();
-
          friendsneeded = 0;
          $('#friendsuntilunlock').hide();
          $('#mycalzone').removeClass('locked').addClass('unlocked');
@@ -115,9 +119,6 @@
       {
          $('#friendsuntilunlock').show();
          $('#mycalzone').removeClass('unlocked').addClass('locked');
-
-         Fuel.overlay.load_window( $('#wrapper'), $('#overlaybox') );
-         $('#overlay-box').find('.overlaybox').show();
       }
       if( friendsadded < 0 ) friendsneeded = 5;
       $('#friendsuntilunlock').text( friendsneeded );
@@ -191,67 +192,6 @@
 <div id="friendslist" class="friendslist">
    <div class='drag position_1' id='f_1'><img src='http://gottaplace.it/50x50' width='50' /><span>Name Goes Here</span></div>
 </div>
-<script type="text/javascript">
-   $(document).ready(function(){
-      $('#appfriends').change(function(){
-         parent.location = "http://apps.facebook.com/calzonecollective/?linked=2&fid=" + $(this).val();
-      });
-
-      $('.drop .select').change(function(){
-         var n = $(this).val();
-         var p = $(this).parent().attr('id');
-
-         if( $(this).parent().find('.drag').length != 0 )
-         {
-            $.ajax({
-               type: "POST",
-               url: "<?=URL_FULL?>home/savefamilymembername?fb_sig_user=<?=$globals->FBUid?>",
-               data: "p=" + p + "&n=" + n + "",
-               success: function(data){
-                  console.debug("MUCH GREAT SUCCESS!");
-               }
-            });
-         }
-      });
-
-      $('#addmorefriends').click( function(){
-         Fuel.overlay.hide();
-         sended("addmore", "", "");
-      });
-      $('#posttowall').click( function(){
-         Fuel.overlay.hide();
-
-         var attachment = {
-         	"name":"Old Chicago",
-         	"href":"http://apps.facebook.com/calzonecollective/?linked=1&fid=<?=$globals->FBUid?>",
-         	"description":"I just added you as a trusted member of my family tree and got myself a free Old Chicago calzone.  You gonna make me eat it alone?  Click on the OC logo and get your own here.",
-         	"media":[{'type':'image','src':'http://chicago-prod.fuelindustries.com/assets/images/CC_75_75.jpg','href':'http://apps.facebook.com/calzonecollective/?linked=1&fid=<?=$globals->FBUid?>'}]};
-         var links = [{'text':'Old Chicago','href':'http://apps.facebook.com/calzonecollective'}];
-
-         FB.ensureInit(function(){
-            FB.Connect.streamPublish( '', attachment, links, fid, 'Calzone Collective', sends );
-         });
-      });
-      $('#sharewithfriends').click( function(){
-         Fuel.overlay.hide();
-
-         var attachment = {
-         	"name":"Old Chicago",
-         	"href":"http://apps.facebook.com/calzonecollective/?linked=1&fid=<?=$globals->FBUid?>",
-         	"description":"I just selected my most trusted friends to be in my family tree - and got myself a free Old Chicago calzone. Don't make me eat it alone. Click on the OC logo and get your own free calzone coupon here.",
-         	"media":[{'type':'image','src':'http://chicago-prod.fuelindustries.com/assets/images/CC_75_75.jpg','href':'http://apps.facebook.com/calzonecollective/?linked=1&fid=<?=$globals->FBUid?>'}]};
-         var links = [{'text':'Old Chicago','href':'http://apps.facebook.com/calzonecollective'}];
-
-         FB.ensureInit(function(){
-            FB.Connect.streamPublish( "", attachment, links, null, 'Calzone Collective', sends );
-         });
-      });
-      $('#skip').click( function(){
-         Fuel.overlay.hide();
-         sended("skip", "", "");
-      });
-   });
-</script>
 
 <div id="consigliere" class="drop"></div>
 
@@ -266,3 +206,6 @@
 <div id="soldier_c" class="drop"></div>
 <div id="soldier_d" class="drop"></div>
 <div id="soldier_e" class="drop"></div>
+
+</body>
+</html>
